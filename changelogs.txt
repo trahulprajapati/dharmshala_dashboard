@@ -1,0 +1,8 @@
+3/24/2021
+create git repo, jira, requirement analysis
+
+3/25/2021
+setup envirorment
+work on - User app 
+Task - User registeration - in progress 
+		User Login,logout, reset password,  forget password-- pending
