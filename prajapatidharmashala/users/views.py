@@ -1,13 +1,15 @@
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListCreateAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.decorators import action
 from django.contrib.auth import authenticate, get_user_model, logout
+from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
 
 from .models import UserProfile
 from . import serializers
@@ -107,3 +109,32 @@ class ProfileView(RetrieveAPIView):
 				'error': str(e)
 			}
 		return Response(res, status=status_code)
+
+#list 
+class UserListView(viewsets.ViewSet):
+	permission_classes = [AllowAny, ]
+
+	def list(self, request):
+		queryset = User.objects.all()
+		serializer = serializers.UserRegisterSerializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, mobile):
+		queryset = User.objects.all()
+		user = get_object_or_404(queryset, mobile=mobile)
+		serializer = serializers.UserRegisterSerializer(user)
+		return Response(serializer.data)
+
+
+class UpdateUserProfileView(UpdateAPIView):
+	queryset = User.objects.all()
+	permission_classes = (IsAuthenticated,)
+	serializer_class = serializers.UpdateUserSerializer
+
+
+class RestUserPwdView(UpdateAPIView):
+
+	queryset = User.objects.all()
+	permission_classes = (IsAuthenticated,)
+	serializer_class = serializers.RestPwdSerializer
+

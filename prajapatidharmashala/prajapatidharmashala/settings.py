@@ -26,7 +26,7 @@ SECRET_KEY = 'c^byw%%$d_c&)(r_6jf$o9$gnjngh_6eey@-!!669hgojnme+#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 AUTH_USER_MODEL = 'users.User'
 REST_FRAMEWORK = {
@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'users'
+    'corsheaders',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -59,6 +60,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+
+#fronend server url 
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8080',
+    "http://127.0.0.1:8080"
 ]
 
 ROOT_URLCONF = 'prajapatidharmashala.urls'

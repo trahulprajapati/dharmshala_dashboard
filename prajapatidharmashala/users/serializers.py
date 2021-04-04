@@ -53,6 +53,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 		)
 		return user
 
+		
 
 class UserLoginSerializers(serializers.Serializer):
 	mobile = serializers.CharField(max_length=255)
@@ -85,3 +86,66 @@ class UserLoginSerializers(serializers.Serializer):
 class EmptySerializer(serializers.Serializer):
 	pass
 
+
+class UpdateUserSerializer (serializers.ModelSerializer):
+	mobile = serializers.IntegerField(required=True)
+
+	profile = UserProfileSerializer(required=False)
+
+	class Meta:
+		model = User
+		fields = ('mobile', 'email', 'profile')
+		extra_kwargs = {'password': {'write_only': True}}
+
+	def validate_mobile(self, value):
+		#check if already tken
+		user = User.objects.filter(mobile=value)
+		if user is None:
+			raise serializers.ValidationError("User not exist")
+		return value
+
+	def update(self, instance, validated_data):
+		profile = validated_data.pop('profile')
+		profile.last_name = validated_data.get('last_name', profile.last_name)
+		profile.first_name = validated_data.get('first_name', profile.first_name)
+		profile.father = validated_data.get('father', profile.father)
+		profile.village = validated_data.get('village', profile.village)
+		profile.alt_mobile = validated_data.get('alt_mobile', profile.alt_mobile)
+		profile.age = validated_data.get('age', profile.age)
+		profile.occupation = validated_data.get('occupation', profile.occupation)
+		profile.address = validated_data.get('address', profile.address)
+		profile.gender = validated_data.get('gender', profile.gender)
+
+		instance.save()
+
+		return instance
+
+
+class RestPwdSerializer (serializers.ModelSerializer):
+	mobile = serializers.IntegerField(required=True)
+
+	
+	class Meta:
+		model = User
+		fields = ('mobile', 'password')
+		extra_kwargs = {'password': {'write_only': True}}
+
+	def validate_password(self, value):
+		#check if already tken
+		user = self.context['request'].user
+		if not user.check_password(value):
+			raise serializers.ValidationError("password is invalid")
+		return value
+
+	def validate_mobile(self, value):
+		#check if already tken
+		user = User.objects.filter(mobile=value)
+		if user is None:
+			raise serializers.ValidationError("User not exist")
+		return value
+
+	def update(self, instance, validated_data):
+		instance.password = validated_data.get('password')
+		instance.save()
+
+		return instance

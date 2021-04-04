@@ -4,5 +4,6 @@ create git repo, jira, requirement analysis
 3/25/2021
 setup envirorment
 work on - User app 
-Task - User registeration - in progress 
-		User Login,logout, reset password,  forget password-- pending
+Task - User registeration - completed
+		User Login,logout, profile,  reset password,  forget password-- completed
+
