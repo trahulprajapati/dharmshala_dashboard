@@ -65,8 +65,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-	mobile = models.IntegerField('Mobile number', blank=False, unique=True, null=False)
+	#id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+	mobile = models.IntegerField('Mobile number', unique=True, db_index=True)
 	email = models.EmailField(
 		verbose_name='email address',
 		max_length=255,
@@ -82,6 +82,8 @@ class User(AbstractBaseUser):
 	class Meta:
 		db_table = 'core_user'
 
+	def __str__(self):
+		return '{} {} '.format(self.mobile, self.email)
 
 
 class UserProfile(models.Model):
@@ -94,8 +96,8 @@ class UserProfile(models.Model):
 	village = models.CharField('Village', max_length=20, blank=False, null=False)
 	alt_mobile = models.IntegerField('Alternative Mobile number')
 	age = models.IntegerField('Age', default=0)
-	occupation = models.CharField('Last Name', max_length=20, blank=False, null=False,  default='NA')
-	address = models.CharField('address', max_length=255, blank=False, null=False,  default='')
+	occupation = models.CharField('Occupation', max_length=20, blank=False, null=False,  default='NA')
+	address = models.CharField('Address', max_length=255, blank=False, null=False,  default='')
 	date_joined = models.DateField(_("date_joined"), default=datetime.date.today)
 	USER_CHOICES = (
 		('MALE', 'male'),
@@ -106,6 +108,10 @@ class UserProfile(models.Model):
 
 	class Meta:
 		db_table = 'core_profile'
+
+
+	def __str__(self):
+		return '{} {} {} {} {} {} {} {} '.format(self.first_name, self.last_name, self.father, self.village, self.occupation, self,address, self,alt_mobile, self,age)
 
 
 	def get_full_name(self) -> str:

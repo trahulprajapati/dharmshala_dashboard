@@ -7,3 +7,5 @@ work on - User app
 Task - User registeration - completed
 		User Login,logout, profile,  reset password,  forget password-- completed
 
+
+5/30/2021 - update user uppdatee serialisers, it was not working, alter user model
