@@ -20,13 +20,16 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
+	mobile = serializers.IntegerField(required=True)
+	email = serializers.EmailField(required=False)
+	password = serializers.CharField(required=False)
 
 	profile = UserProfileSerializer(required=False)
 
 	class Meta:
 		model = User
-		#fields = ('mobile', 'password', 'email', 'profile')
-		fields = '__all__'#('mobile', 'password', 'email', 'profile')
+		fields = ('mobile', 'password', 'email', 'profile')
+		#fields = '__all__'#('mobile', 'password', 'email', 'profile')
 		extra_kwargs = {'password': {'write_only': True}}
 
 	def validate_mobile(self, value):
@@ -36,6 +39,21 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 			raise serializers.ValidationError("Mobile number already exist")
 		return value
 
+	def validate_email(self, value):
+		#check if already tken
+		user = User.objects.filter(email=value)
+		if user:
+			raise serializers.ValidationError("Email already exist")
+		return value
+
+	def validate_password(self, value):
+		#check if already tken
+		#user = User.objects.filter(mobile=value)
+		if not value:
+			value = '123456'
+
+		return value
+	
 	def create(self, validated_data):	
 		profile_data = validated_data.pop('profile')
 		user = User.objects.create_user(**validated_data)
@@ -53,26 +71,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 		)
 		return user
 
-	# def update(self, instance, validated_data):
-	# 	#user
-	# 	profile = validated_data.pop('profile')
-	# 	instance.email = validated_data.get('email', instance.email)
-
-	# 	#profile
-	# 	instance.profile.last_name = validated_data.get('last_name', profile.last_name)
-	# 	instance.profile.first_name = validated_data.get('first_name', profile.first_name)
-	# 	instance.profile.father = validated_data.get('father', profile.father)
-	# 	instance.profile.village = validated_data.get('village', profile.village)
-	# 	instance.profile.alt_mobile = validated_data.get('alt_mobile', profile.alt_mobile)
-	# 	instance.profile.age = validated_data.get('age', profile.age)
-	# 	instance.profile.occupation = validated_data.get('occupation', profile.occupation)
-	# 	instance.profile.address = validated_data.get('address', profile.address)
-	# 	instance.profile.gender = validated_data.get('gender', profile.gender)
-
-	# 	instance.save()
-
-	# 	return instance
-		
 
 class UserLoginSerializers(serializers.Serializer):
 	mobile = serializers.CharField(max_length=255)
