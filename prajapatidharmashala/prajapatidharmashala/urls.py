@@ -20,4 +20,5 @@ from django.conf.urls import include, url
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^prajapatidharmashala/', include('users.urls')),
+    url(r'^prajapatidharmashala/', include('donation.urls')),
 ]

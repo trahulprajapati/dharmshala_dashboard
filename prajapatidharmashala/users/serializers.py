@@ -104,46 +104,6 @@ class UserLoginSerializers(serializers.Serializer):
 class EmptySerializer(serializers.Serializer):
 	pass
 
-
-# class UpdateUserSerializer (serializers.ModelSerializer):
-# 	mobile = serializers.IntegerField(required=True)
-
-# 	profile = UserProfileSerializer(required=False)
-
-# 	class Meta:
-# 		model = User
-# 		fields = ['mobile', 'profile']
-# 		#fields = ('profile')
-# 		#extra_kwargs = {'password': {'write_only': True}}
-
-# 	def validate_mobile(self, value):
-# 		#check if already tken
-# 		user = User.objects.filter(mobile=value)
-# 		if user is None:
-# 			raise serializers.ValidationError("User not exist")
-# 		return value
-
-	# def update(self, instance, validated_data):
-	# 	#user
-	# 	#profile = validated_data.pop('profile')
-	# 	instance.email = validated_data.get('email', instance.email)
-
-	# 	#profile
-	# 	profile_data = validated_data.pop('profile')
-	# 	instance.profile.first_name = profile_data['first_name'],
-	# 	instance.profile.last_name = profile_data['last_name'],
-	# 	instance.profile.father = profile_data['father'],
-	# 	instance.profile.alt_mobile = profile_data['alt_mobile'],
-	# 	instance.profile.age = profile_data['age'],
-	# 	instance.profile.occupation = profile_data['occupation'],
-	# 	instance.profile.address = profile_data['address'],
-	# 	instance.profile.gender = profile_data['gender'],
-
-	# 	instance.save()
-
-	# 	return instance
-
-
 class UpdateUserSerializer (serializers.ModelSerializer):
 	mobile = serializers.IntegerField(required=True)
 
@@ -152,8 +112,6 @@ class UpdateUserSerializer (serializers.ModelSerializer):
 	class Meta:
 		model = User
 		fields = ['mobile', 'profile']
-		#fields = ('profile')
-		#extra_kwargs = {'password': {'write_only': True}}
 
 	def validate_mobile(self, value):
 		#check if already tken

@@ -10,3 +10,7 @@ Task - User registeration - completed
 
 5/30/2021 - git commit - update user uppdatee serialisers, it was not working, alter user model
 5/21/2021 - added authentication for register view
+6/4/2021 - start donation app, in middle of donation model
+6/9/2021 - donation add, list created , histrory table is created in order to track update donation
+			 working on update, update s not working 
+6/10/2021 - Update is working, retrive donation completed with history

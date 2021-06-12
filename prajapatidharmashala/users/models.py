@@ -87,7 +87,7 @@ class User(AbstractBaseUser):
 
 
 class UserProfile(models.Model):
-	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+	#id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	user = models.OneToOneField(User, on_delete=models.CASCADE, default='', related_name='profile')
 	#roles = models.ManyToManyField(Role)
 	first_name = models.CharField('First Name', max_length=255, blank=False, null=False,default='')
