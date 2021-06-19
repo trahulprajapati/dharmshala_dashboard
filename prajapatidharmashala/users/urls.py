@@ -15,8 +15,11 @@ urlpatterns = [
 	path('api/account/profile/', views.ProfileView.as_view()),
 	path('api/account/list/', views.UserListView.as_view({'get': 'list'})),
 	path('api/account/list/<int:mobile>', views.UserListView.as_view({'get': 'retrieve'})),
+	#path('api/account/get_uid/<int:mobile>', views.UserListView.as_view({'get': 'get_uid'})),
+	path('api/account/get_uid', views.UserListView.as_view({'get': 'get_uid'})),
 	path('api/account/update/<int:mobile>', views.UpdateUserProfileView.as_view()),
 	path('api/account/reset_pwd/<int:mobile>', views.RestUserPwdView.as_view()),
+
 ]
 
 urlpatterns += router.urls

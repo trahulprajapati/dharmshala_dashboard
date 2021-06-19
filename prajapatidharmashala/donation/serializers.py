@@ -4,7 +4,8 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import update_last_login
 from rest_framework_jwt.settings import api_settings
 from .models import Donation
-
+from users.models import UserProfile
+from users.serializers import UserSerializerGet
 from prajapatidharmashala.settings import AUTH_USER_MODEL
 
 #JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
@@ -19,9 +20,12 @@ class DonationSerializer(serializers.ModelSerializer):
 	# village = serializers.CharField(required=False)
 	# amount = serializers.IntegerField(required=False)
 
+	agent_id = UserSerializerGet()
+
 	class Meta:
 		model = Donation
-		fields = '__all__'
+		fields = ('id', 'name', 'father', 'village', 'mobile', 'donation_type', 'amount', 
+		'other', 'date', 'remark', 'due', 'agent_id')
 
 	def create(self, validated_data):
 		user = Donation.objects.create(**validated_data)
@@ -49,14 +53,17 @@ class DonationSerializer(serializers.ModelSerializer):
 	# 	return instance
 
 class UpdateDonationSerializer (serializers.ModelSerializer):
+	agent_id = UserSerializerGet()
 
 	class Meta:
 		model = Donation
-		fields = '__all__'
+		fields = ('id', 'name', 'father', 'village', 'mobile', 'donation_type', 'amount', 
+		'other', 'date', 'remark', 'due', 'agent_id')
 
 
 class DonationHistorySerializer(serializers.ModelSerializer):
 	history = serializers.SerializerMethodField(read_only=True)
+	agent_id = UserSerializerGet()
 
 	class Meta:
 		#model = Donation.history.model
@@ -66,5 +73,16 @@ class DonationHistorySerializer(serializers.ModelSerializer):
 		read_only_fields = ('history',)
 
 	def get_history(self, obj):
-		history = obj.history.filter(id=obj.pk).values('name', 'father').order_by('-history_date')
+		history = obj.history.filter(id=obj.pk).values('history_date', 'remark', 'agent_id', 'amount', 'other' ).order_by('-history_date')
 		return history
+
+	# def get_profile(self, obj):
+	# 	uid = self.get_agent_id
+	# 	#name = UserProfile.objects.filter(user_id=uid).values('first_name', 'last_name')
+	# 	#return obj.profile.filter(user_id=uid).values('first_name', 'last_name')
+	# 	return obj.profile.filter(user_id=uid).values('first_name', 'last_name')
+	# 	#return obj.agent_name.
+
+
+	# def get_agent_id(self, obj):
+	# 	return value

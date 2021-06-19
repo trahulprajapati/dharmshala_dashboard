@@ -8,6 +8,7 @@ from rest_framework.decorators import action
 from django.contrib.auth import authenticate, get_user_model, logout
 from . import serializers
 from .models import Donation
+from users.models import UserProfile
 # Create your views here.
 
 #User = get_user_model()
@@ -30,7 +31,16 @@ class DonationCreate(viewsets.ViewSet):
 	def list(self, request):
 		queryset = Donation.objects.all()
 		serializer = serializers.DonationSerializer(queryset, many=True)
-		return Response(serializer.data)
+		donation_data = list(serializer.data)
+		for i in donation_data:
+			i['agent_name'] = 'sssssdada'
+		# for k in donation_data:
+		# 	kval11 = donation_data[k]
+		# 	kval11['agent_name'] = kval11['agent_id']['first_name']
+			# for k2 in kval11:
+			# 	kval11['agent_name'] = kval11[k2]
+		#donation_data['agent_name'] = str('gtesssssssssssss')
+		return Response(donation_data)
 
 	# def list(self, request):
 	# 	queryset = Donation.objects.all()
@@ -45,6 +55,7 @@ class DonationCreate(viewsets.ViewSet):
 	def retrieve(self, request, pk=None):
 		queryset = Donation.objects.all()
 		user = get_object_or_404(queryset, pk=pk)
+		#profile = UserProfile.objects.all()
 		serializer = serializers.DonationHistorySerializer(user)
 		return Response(serializer.data)
 

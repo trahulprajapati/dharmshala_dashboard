@@ -19,6 +19,24 @@ class UserProfileSerializer(serializers.ModelSerializer):
 		fields = ('first_name', 'last_name', 'father', 'village', 'alt_mobile', 'age', 'occupation', 'address', 'gender')
 
 
+class UserProfileGetSerializer(serializers.ModelSerializer):
+	
+	class Meta:
+		model = UserProfile
+		fields = ('first_name', 'last_name')
+
+
+class UserGetUidSerializer(serializers.ModelSerializer):
+	mobile = serializers.IntegerField(required=True)
+	id = serializers.IntegerField(required=True)
+	profile = UserProfileSerializer(required=False)
+
+	class Meta:
+		model = User
+		fields = ('id', 'mobile', 'profile')
+		read_only_fields = ('id',)
+
+
 class UserRegisterSerializer(serializers.ModelSerializer):
 	mobile = serializers.IntegerField(required=True)
 	email = serializers.EmailField(required=False)
@@ -71,6 +89,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 		)
 		return user
 
+class UserSerializerGet(serializers.ModelSerializer):
+	profile = UserProfileGetSerializer(required=False)
+
+	class Meta:
+		model = User
+		fields = ('mobile', 'id', 'profile')
+		#fields = '__all__'#('mobile', 'password', 'email', 'profile')
+		#extra_kwargs = {'password': {'write_only': True}}
 
 class UserLoginSerializers(serializers.Serializer):
 	mobile = serializers.CharField(max_length=255)

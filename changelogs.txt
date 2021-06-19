@@ -14,3 +14,6 @@ Task - User registeration - completed
 6/9/2021 - donation add, list created , histrory table is created in order to track update donation
 			 working on update, update s not working 
 6/10/2021 - Update is working, retrive donation completed with history
+6/16/2021 - created get_user api, get id from mobile
+6/19/2021 - 4h
+			Updated donation serialisers to get name too

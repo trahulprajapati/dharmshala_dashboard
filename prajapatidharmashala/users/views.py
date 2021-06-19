@@ -19,7 +19,6 @@ User = get_user_model()
 
 class AuthViewSet(viewsets.GenericViewSet):
 	permission_classes = [AllowAny, ]
-	#serializer_class = serializers.UserRegisterSerializer
 	serializer_class = serializers.EmptySerializer  
 	queryset = ''
 	serializer_classes = {
@@ -127,33 +126,28 @@ class UserListView(viewsets.ViewSet):
 		serializer = serializers.UserRegisterSerializer(user)
 		return Response(serializer.data)
 
+	#def get_uid(self, request):
+	def get_uid(self, request, *args, **kwargs):
+		#uid = kwargs.get('uid', '')
+		#mobile = kwargs.get('mobile', '')
+		uid = request.query_params.get('uid')
+		mobile = request.query_params.get('mobile')
+		#values_list
+		#queryset = User.objects.values_list('id')
+		queryset = User.objects.only('id')
+		if mobile:
+			user = get_object_or_404(queryset, mobile=mobile)
+		elif uid:
+			user = get_object_or_404(queryset, id=uid)
+
+		serializer = serializers.UserGetUidSerializer(user)
+		return Response(serializer.data)
 
 class UpdateUserProfileView(UpdateAPIView,):
 	queryset = User.objects.all()
 	lookup_field = 'mobile'
 	permission_classes = (IsAuthenticated,)
 	serializer_class = serializers.UpdateUserSerializer
-
-
-# class RegisterUserView(UpdateAPIView,):
-#   queryset = User.objects.all()
-#   lookup_field = 'mobile'
-#   permission_classes = (IsAuthenticated,)
-#   serializer_class = serializers.UpdateUserSerializer
-	# def update(self, request, *args, **kwargs):
-	#   profile = kwargs.pop('profile', False)
-	#   instance = self.get_object()
-	#   serializer = self.get_serializer(instance, data=request.data, partial=profile)
-	#   serializer.is_valid(raise_exception=True)
-	#   self.perform_update(serializer)
-	#   result = {
-	#   "message": "success",
-	#   "details": serializer.data,
-	#   "status": 200,
-
-	#   }
-	#   return Response(result)
-
 
 
 class RestUserPwdView(UpdateAPIView):
