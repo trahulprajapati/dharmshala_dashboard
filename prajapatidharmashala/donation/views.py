@@ -24,23 +24,25 @@ class DonationCreate(viewsets.ViewSet):
 		response = {
 			'success' : 'True',
 			'status_code' : status_code,
-			'message': 'User registered  successfully',
+			'message': 'Donation registered  successfully',
+			'data': serializer.data
 		}
 		return Response(response, status=status_code)
 
 	def list(self, request):
 		queryset = Donation.objects.all()
-		serializer = serializers.DonationSerializer(queryset, many=True)
-		donation_data = list(serializer.data)
-		for i in donation_data:
-			i['agent_name'] = 'sssssdada'
+		serializer = serializers.ListDonationSerializer(queryset, many=True)
+		# donation_data = list(serializer.data)
+		# for ref in donation_data:
+		# 	ref['agent_id'] = ref['agent_id']['']
+		# 	del ref[]
 		# for k in donation_data:
 		# 	kval11 = donation_data[k]
 		# 	kval11['agent_name'] = kval11['agent_id']['first_name']
 			# for k2 in kval11:
 			# 	kval11['agent_name'] = kval11[k2]
 		#donation_data['agent_name'] = str('gtesssssssssssss')
-		return Response(donation_data)
+		return Response(serializer.data)
 
 	# def list(self, request):
 	# 	queryset = Donation.objects.all()
