@@ -17,3 +17,14 @@ Task - User registeration - completed
 6/16/2021 - created get_user api, get id from mobile
 6/19/2021 - 4h
 			Updated donation serialisers to get name too
+6/27/2021 - 5h
+			DB schema design rough
+6/28/2021 - 6h
+			DB schema design model , created pdf
+6/29/2021 - 4h
+			Created expense model and in middle of expense serialisers
+6/30/2021 - 4h
+			Created add and list expense view and working expected
+7/01/2021 - 6h
+			Created retrive and update API, working expected
+			git commit

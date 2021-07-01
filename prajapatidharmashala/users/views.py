@@ -27,8 +27,8 @@ class AuthViewSet(viewsets.GenericViewSet):
 	}
 
 	#register
-	@action(methods=['POST', ], detail=False, permission_classes=[IsAuthenticated, ])
-	#@action(methods=['POST', ], detail=False)
+	#@action(methods=['POST', ], detail=False, permission_classes=[IsAuthenticated, ])
+	@action(methods=['POST', ], detail=False)
 	def register(self, request):
 		serializer = self.get_serializer(data=request.data)
 		serializer.is_valid(raise_exception=True)

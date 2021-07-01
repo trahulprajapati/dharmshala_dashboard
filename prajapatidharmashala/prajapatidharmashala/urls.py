@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^prajapatidharmashala/', include('users.urls')),
     url(r'^prajapatidharmashala/', include('donation.urls')),
+    url(r'^prajapatidharmashala/', include('expense.urls')),
 ]

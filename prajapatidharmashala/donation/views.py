@@ -75,7 +75,7 @@ class DonationCreate(viewsets.ViewSet):
 	# 	permission_classes = [AllowAny, ]
 	# 	return [permission() for permission in permission_classes]
 
-	
+
 class UpdateDonationView(UpdateAPIView,):
 	queryset = Donation.objects.all()
 	#lookup_field = 'id'
