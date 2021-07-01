@@ -1,13 +1,15 @@
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListCreateAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.decorators import action
 from django.contrib.auth import authenticate, get_user_model, logout
+from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
 
 from .models import UserProfile
 from . import serializers
@@ -17,8 +19,7 @@ User = get_user_model()
 
 class AuthViewSet(viewsets.GenericViewSet):
 	permission_classes = [AllowAny, ]
-	#serializer_class = serializers.UserRegisterSerializer
-	serializer_class = serializers.EmptySerializer	
+	serializer_class = serializers.EmptySerializer  
 	queryset = ''
 	serializer_classes = {
 		'register': serializers.UserRegisterSerializer,
@@ -26,6 +27,7 @@ class AuthViewSet(viewsets.GenericViewSet):
 	}
 
 	#register
+	#@action(methods=['POST', ], detail=False, permission_classes=[IsAuthenticated, ])
 	@action(methods=['POST', ], detail=False)
 	def register(self, request):
 		serializer = self.get_serializer(data=request.data)
@@ -50,7 +52,8 @@ class AuthViewSet(viewsets.GenericViewSet):
 			'status_code' : status_code,
 			'message': 'User logged  successfully',
 			'token' : serializer.data['token'],
-			'mobile' : serializer.data['mobile']
+			'mobile' : serializer.data['mobile'],
+			#'serializer' : serializer.data
 		}
 		return Response(response, status=status_code)
 
@@ -107,3 +110,49 @@ class ProfileView(RetrieveAPIView):
 				'error': str(e)
 			}
 		return Response(res, status=status_code)
+
+#list 
+class UserListView(viewsets.ViewSet):
+	permission_classes = [AllowAny, ]
+
+	def list(self, request):
+		queryset = User.objects.all()
+		serializer = serializers.UserRegisterSerializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, mobile):
+		queryset = User.objects.all()
+		user = get_object_or_404(queryset, mobile=mobile)
+		serializer = serializers.UserRegisterSerializer(user)
+		return Response(serializer.data)
+
+	#def get_uid(self, request):
+	def get_uid(self, request, *args, **kwargs):
+		#uid = kwargs.get('uid', '')
+		#mobile = kwargs.get('mobile', '')
+		uid = request.query_params.get('uid')
+		mobile = request.query_params.get('mobile')
+		#values_list
+		#queryset = User.objects.values_list('id')
+		queryset = User.objects.only('id')
+		if mobile:
+			user = get_object_or_404(queryset, mobile=mobile)
+		elif uid:
+			user = get_object_or_404(queryset, id=uid)
+
+		serializer = serializers.UserGetUidSerializer(user)
+		return Response(serializer.data)
+
+class UpdateUserProfileView(UpdateAPIView,):
+	queryset = User.objects.all()
+	lookup_field = 'mobile'
+	permission_classes = (IsAuthenticated,)
+	serializer_class = serializers.UpdateUserSerializer
+
+
+class RestUserPwdView(UpdateAPIView):
+
+	queryset = User.objects.all()
+	permission_classes = (IsAuthenticated,)
+	serializer_class = serializers.RestPwdSerializer
+

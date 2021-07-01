@@ -19,13 +19,34 @@ class UserProfileSerializer(serializers.ModelSerializer):
 		fields = ('first_name', 'last_name', 'father', 'village', 'alt_mobile', 'age', 'occupation', 'address', 'gender')
 
 
+class UserProfileGetSerializer(serializers.ModelSerializer):
+	
+	class Meta:
+		model = UserProfile
+		fields = ('first_name', 'last_name')
+
+
+class UserGetUidSerializer(serializers.ModelSerializer):
+	mobile = serializers.IntegerField(required=True)
+	id = serializers.IntegerField(required=True)
+	profile = UserProfileSerializer(required=False)
+
+	class Meta:
+		model = User
+		fields = ('id', 'mobile', 'profile')
+		read_only_fields = ('id',)
+
+
 class UserRegisterSerializer(serializers.ModelSerializer):
+	mobile = serializers.IntegerField(required=True)
+	email = serializers.EmailField(required=False)
+	password = serializers.CharField(required=False)
 
 	profile = UserProfileSerializer(required=False)
 
 	class Meta:
 		model = User
-		fields = ('mobile', 'password', 'email', 'profile')
+		fields = ('id', 'mobile', 'password', 'email', 'profile')
 		#fields = '__all__'#('mobile', 'password', 'email', 'profile')
 		extra_kwargs = {'password': {'write_only': True}}
 
@@ -36,6 +57,21 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 			raise serializers.ValidationError("Mobile number already exist")
 		return value
 
+	def validate_email(self, value):
+		#check if already tken
+		user = User.objects.filter(email=value)
+		if user:
+			raise serializers.ValidationError("Email already exist")
+		return value
+
+	def validate_password(self, value):
+		#check if already tken
+		#user = User.objects.filter(mobile=value)
+		if not value:
+			value = '123456'
+
+		return value
+	
 	def create(self, validated_data):	
 		profile_data = validated_data.pop('profile')
 		user = User.objects.create_user(**validated_data)
@@ -53,6 +89,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 		)
 		return user
 
+class UserSerializerGet(serializers.ModelSerializer):
+	profile = UserProfileGetSerializer(required=False)
+
+	class Meta:
+		model = User
+		fields = ('mobile', 'id', 'profile')
+		#fields = '__all__'#('mobile', 'password', 'email', 'profile')
+		#extra_kwargs = {'password': {'write_only': True}}
 
 class UserLoginSerializers(serializers.Serializer):
 	mobile = serializers.CharField(max_length=255)
@@ -72,6 +116,7 @@ class UserLoginSerializers(serializers.Serializer):
 		if user is None:
 			raise serializers.ValidationError("Username password incorrect")
 
+
 		try:
 			payload = JWT_PAYLOAD_HANDLER(user)
 			jwt_token = JWT_ENCODE_HANDLER(payload)
@@ -85,3 +130,71 @@ class UserLoginSerializers(serializers.Serializer):
 class EmptySerializer(serializers.Serializer):
 	pass
 
+class UpdateUserSerializer (serializers.ModelSerializer):
+	mobile = serializers.IntegerField(required=True)
+
+	profile = UserProfileSerializer(required=False)
+
+	class Meta:
+		model = User
+		fields = ['mobile', 'profile']
+
+	def validate_mobile(self, value):
+		#check if already tken
+		user = User.objects.filter(mobile=value)
+		if user is None:
+			raise serializers.ValidationError("User not exist")
+		return value
+
+	def update(self, instance, validated_data):
+		#user
+		print (validated_data['profile'])
+		profile_data = validated_data.pop('profile')
+		
+		profile = instance.profile
+		instance.email = validated_data.get('email', instance.email)
+		instance.save()
+
+		#profile
+		profile.first_name = profile_data.get('first_name', profile.first_name)
+		profile.last_name = profile_data.get('last_name', profile.last_name)
+		profile.father = profile_data.get('father', profile.father)
+		profile.alt_mobile = profile_data.get('alt_mobile', profile.alt_mobile)
+		profile.age = profile_data.get('age', profile.age)
+		profile.occupation = profile_data.get('occupation', profile.occupation)
+		profile.address = profile_data.get('address', profile.address)
+		profile.gender = profile_data.get('gender', profile.gender)
+
+		profile.save()
+
+		return instance
+
+
+class RestPwdSerializer (serializers.ModelSerializer):
+	mobile = serializers.IntegerField(required=True)
+
+	
+	class Meta:
+		model = User
+		fields = ('mobile', 'password')
+		extra_kwargs = {'password': {'write_only': True}}
+
+	def validate_password(self, value):
+		#check if already tken
+		user = self.context['request'].user
+		if not user.check_password(value):
+			raise serializers.ValidationError("password is invalid")
+		return value
+
+	def validate_mobile(self, value):
+		#check if already tken
+		user = User.objects.filter(mobile=value)
+		if user is None:
+			raise serializers.ValidationError("User not exist")
+		return value
+
+	def update(self, instance, validated_data):
+		instance.password = validated_data.get('password')
+		instance.save()
+
+		return instance

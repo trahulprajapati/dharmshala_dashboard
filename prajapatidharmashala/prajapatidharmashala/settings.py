@@ -26,7 +26,7 @@ SECRET_KEY = 'c^byw%%$d_c&)(r_6jf$o9$gnjngh_6eey@-!!669hgojnme+#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 AUTH_USER_MODEL = 'users.User'
 REST_FRAMEWORK = {
@@ -48,7 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'users'
+    'corsheaders',
+    'users',
+    'donation',
+    'expense',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +62,40 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+#fronend server url 
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+    'http://192.168.43.221:8080'
+]
+
+#Reason: CORS header ‘Access-Control-Allow-Origin’ missing
+# CORS_ALLOW_HEADERS = [
+#     'accept',
+#     'accept-encoding',
+#     'authorization',
+#     'content-type',
+#     'dnt',
+#     'origin',
+#     'user-agent',
+#     'x-csrftoken',
+#     'x-requested-with',
+# ]
+CORS_ALLOW_HEADERS = [
+    'x-requested-with',
+    'content-type',
+    'accept',
+    'origin',
+    'authorization',
+    'x-csrftoken',
+    'Access-Control-Allow-Origin'
+]
+
+CORS_ORIGIN_ALLOW_ALL=True
 
 ROOT_URLCONF = 'prajapatidharmashala.urls'
 

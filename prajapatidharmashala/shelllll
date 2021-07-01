@@ -1,0 +1,34 @@
+p = UserProfile(first_name= "test1", last_name= "tye1",father= "the1 ysh",village= "v1test",alt_mobile= 315264728,age= 213,occupation= "pl1s",address="da 1fgerfe", gender= "MALE")
+
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+from users.serializers import UpdateUserSerializer
+from users.models import UserProfile, User
+
+u = User(mobile=123, profile=p)
+u.save
+
+serializer = SnippetSerializer(snippet)
+serializer.data
+
+
+import io
+
+stream = io.BytesIO(content)
+data = JSONParser().parse(stream)
+
+
+
+p = UserProfile("first_name"= "test1", "last_name"= "tye1","father"= "the1 ysh","village"= "v1test","alt_mobile"= 315264728,"age"= 213,"occupation"= "pl1s","address"="da 1fgerfe", "gender"= "MALE")
+
+
+>>> s= UpdateUserSerializer(u)
+>>> s.data
+{'mobile': 123, 'profile': OrderedDict([('first_name', 'test1'), ('last_name', 'tye1'), ('father', 'the1 ysh'), ('village', 'v1test'), ('alt_mobile', 315264728), ('age', 213), ('occupation', 'pl1s'), ('address', 'da 1fgerfe'), ('gender', 'MALE')])}
+>>>
+>>>
+>>> content = JSONRenderer().render(s.data)
+>>> content
+b'{"mobile":123,"profile":{"first_name":"test1","last_name":"tye1","father":"the1 ysh","village":"v1test","alt_mobile":315264728,"age":213,"occupation":"pl1s","address":"da 1fgerfe","gender":"MALE"}}'
+>>>
+>>>

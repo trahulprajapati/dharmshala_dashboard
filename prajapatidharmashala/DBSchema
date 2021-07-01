@@ -1,0 +1,144 @@
+//// -- LEVEL 1
+//// -- Tables and References
+
+// Creating tables
+Table User as U {
+  id int
+  mobile int [pk] // auto-increment
+  is_active boolean
+  is_superuser boolean
+  is_managmentuser boolean
+  email email
+  created_at timestamp
+}
+
+Table UserProfile as P {
+  id int [pk]
+  user_id int
+  first_name varchar
+  last_name varchar
+  father varchar
+  village varchar
+  alt_mobile varchar
+  age int
+  occupation varchar
+  role varchar
+  address varchar
+  date_joined datetime
+  gender varchar
+}
+
+Ref: U.id > P.user_id  
+
+// Donation
+Table Donation_Type as DT {
+  id int [pk]
+  name varchar
+  description text
+}
+
+Table Donation_Party as DP {
+  id int[pk]
+  amount int
+  due int
+}
+
+
+Table Donation_Item as DI {
+  id int[pk]
+  item_name varchar
+} 
+
+Table Donation as D {
+  id int[pk]
+  dtype_id int
+  party_firstname varchar
+  party_lastname varchar
+  mobile int
+  village varchar
+  remark varchar
+  agent_id id
+  donation_by char
+  dparty_id int
+  ditem_id int
+}
+
+Ref: D.dtype_id - DT.id
+Ref: D.dparty_id - DP.id
+Ref: D.ditem_id - DI.id
+Ref: D.agent_id - U.id
+
+
+// Expense 
+Table Expense_Type as ET {
+  id int [pk]
+  name varchar
+  description varchar
+}
+
+Table Const_Contractor as CC {
+  id int[pk]
+  cname varchar
+  contract_for varchar
+  village varchar
+  mobile varchar
+  start_date datetime
+  due_date datetime
+  remark text
+  peritem varchar
+  totalitem varchar
+}
+
+Table Const_Materials as CM {
+  id int[pk]
+  item_name varchar
+  peritem varchar
+  quantity int
+  biller datetime
+  bill_number text
+  item_type varchar
+  remark varchar
+}
+
+Table Exp_Construction as EC {
+  id int [pk]
+  contactoctor_id int
+  material_id int
+}
+
+Ref: EC.contactoctor_id - CC.id
+Ref: EC.material_id - CM.id
+
+
+Table Exp_Other as EO {
+  id int [pk]
+  exp_name varchar
+  exp_for varchar
+  remark varchar
+}
+
+Table Expense as E {
+  id int [pk]
+  amount int
+  due int
+  check_number int
+  amount_type varchar
+  agent_id int
+  exp_type int
+  expconst_id int
+  expother_id int
+  remark text
+}
+
+Ref : E.agent_id - U.id
+Ref : E.expother_id - EO.id
+Ref: E.exp_type - ET.id
+Ref : E.expconst_id - EC.id
+
+
+
+
+
+
+
+
