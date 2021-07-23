@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from . import models
 from users.models import UserProfile
+from users.serializers import UserSerializerGet
 
 class ContractExpSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -8,6 +9,11 @@ class ContractExpSerializer(serializers.ModelSerializer):
 		fields = ('id', 'c_father', 'village', 'mobile', 'c_name', 'start_date', 'due_date',
 			'c_desc', 'is_contract_new', 'is_contractor_new', 'expense' )
 		
+class ContractUpdateExpSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = models.ConstContract
+		fields = ('id', 'mobile', 'due_date', 'c_desc' )
+		read_only_fields = ('id',)
 
 class MaterialExpSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -86,6 +92,7 @@ class ListExpenseSerializer(serializers.ModelSerializer):
 	contract = ContractExpSerializer(required=False)
 	material = MaterialExpSerializer(required=False)
 	other = OtherExpSerializer(required=False)
+	agent_id = UserSerializerGet()
 	
 	class Meta:
 		model = models.Expense
@@ -96,17 +103,20 @@ class ListExpenseSerializer(serializers.ModelSerializer):
 		#fields = '__all__'
 
 class UpdateExpenseSerializer(serializers.ModelSerializer):
+	#contract = ContractUpdateExpSerializer(required=False)
 	class Meta:
 		model = models.Expense
-		fields = ('id', 'amount', 'amount_type', 'due', 'remark', 
-			'exp_date', 'quantity', 'agent_id')
+		fields = ('id', 'amount', 'amount_type', 'due', 'remark', 'rate',
+			'quantity', 'agent_id')
 		read_only_fields = ('id','agent_id',)
+
 
 class HistoryExpenseSerializer(serializers.ModelSerializer):
 	contract = ContractExpSerializer(required=False)
 	material = MaterialExpSerializer(required=False)
 	other = OtherExpSerializer(required=False)
 	history = serializers.SerializerMethodField(read_only=True)
+	agent_id = UserSerializerGet()
 
 	class Meta:
 		model = models.Expense

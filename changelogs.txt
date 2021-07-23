@@ -27,4 +27,4 @@ Task - User registeration - completed
 			Created add and list expense view and working expected
 7/01/2021 - 6h
 			Created retrive and update API, working expected
-			git commit
+			git commit, push to master
