@@ -15,7 +15,7 @@ urlpatterns = [
 	path('api/donation/add', views.DonationCreate.as_view({'post': 'create'})),
 	path('api/donation/list', views.DonationCreate.as_view({'get': 'list'})),
 	# path('api/account/list/', views.UserListView.as_view({'get': 'list'})),
-	# path('api/account/list/<int:mobile>', views.UserListView.as_view({'get': 'retrieve'})),
+	path('api/donation/getdata', views.DonationCreate.as_view({'get': 'get_data'})),
 	path('api/donation/update/<int:pk>', views.UpdateDonationView.as_view()),
 	path('api/donation/list/<int:pk>', views.DonationCreate.as_view({'get' : 'retrieve'})),
 	# path('api/account/reset_pwd/<int:mobile>', views.RestUserPwdView.as_view()),

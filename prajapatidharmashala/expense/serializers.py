@@ -34,8 +34,8 @@ class CreateExpenseSerializer(serializers.ModelSerializer):
 	
 	class Meta:
 		model = models.Expense
-		fields = ('id', 'biller_name', 'amount', 'amount_type', 'due', 'check_number', 'remark', 'rate',
-			'exp_date', 'quantity', 'agent_id', 'contract_exp', 'material_exp', 'other_exp')
+		fields = ('id', 'biller_name', 'amount', 'amount_type', 'exp_name', 'due', 'check_number', 'remark', 'rate',
+			'exp_date', 'quantity', 'agent_id', 'exp_type', 'contract_exp', 'material_exp', 'other_exp')
 		#'other', 'date', 'remark', 'due', 'agent_id')
 		#fields = '__all__'
 
@@ -96,8 +96,8 @@ class ListExpenseSerializer(serializers.ModelSerializer):
 	
 	class Meta:
 		model = models.Expense
-		fields = ('id', 'biller_name', 'amount', 'amount_type', 'due', 'check_number', 'remark', 'rate',
-			'exp_date', 'quantity', 'agent_id',  'contract', 'material', 'other')
+		fields = ('id', 'biller_name', 'exp_name', 'amount', 'amount_type', 'due', 'check_number', 'remark', 'rate',
+			'exp_date', 'quantity', 'agent_id',  'contract', 'material', 'exp_type', 'other')
 		read_only_fields = ('id','agent_id', 'contract', 'material', 'other')
 		#'other', 'date', 'remark', 'due', 'agent_id')
 		#fields = '__all__'
@@ -120,8 +120,8 @@ class HistoryExpenseSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = models.Expense
-		fields = ('id', 'biller_name', 'amount', 'amount_type', 'due', 'check_number', 'remark', 'rate',
-			'exp_date', 'quantity', 'agent_id', 'history', 'contract', 'material', 'other')
+		fields = ('id', 'biller_name', 'amount', 'exp_name', 'amount_type', 'due', 'check_number', 'remark', 'rate',
+			'exp_date', 'quantity', 'agent_id', 'history', 'contract', 'material', 'other','exp_type',)
 		read_only_fields = ('history',)
 
 	def get_history(self, obj):

@@ -24,7 +24,7 @@ class DonationSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Donation
-		fields = ('id', 'name', 'father', 'village', 'mobile', 'donation_type', 'amount', 
+		fields = ('id', 'name', 'father', 'village', 'mobile', 'donation_type', 'amount', 'd_type', 'event_type',
 		'other', 'date', 'remark', 'due', 'agent_id')
 
 	def create(self, validated_data):
@@ -45,7 +45,7 @@ class ListDonationSerializer (serializers.ModelSerializer):
 
 	class Meta:
 		model = Donation
-		fields = ('id', 'name', 'father', 'village', 'mobile', 'donation_type', 'amount', 
+		fields = ('id', 'name', 'father', 'village', 'mobile', 'donation_type', 'amount', 'd_type', 'event_type',
 		'other', 'date', 'remark', 'due', 'agent_id')
 
 
@@ -56,12 +56,12 @@ class DonationHistorySerializer(serializers.ModelSerializer):
 	class Meta:
 		#model = Donation.history.model
 		model = Donation
-		fields = ('id', 'name', 'father', 'village', 'mobile', 'donation_type', 'amount', 
+		fields = ('id', 'name', 'father', 'village', 'mobile', 'donation_type', 'amount', 'd_type',  'event_type',
 		'other', 'date', 'remark', 'due', 'agent_id', 'history')
 		read_only_fields = ('history',)
 
 	def get_history(self, obj):
-		history = obj.history.filter(id=obj.pk).values('history_date', 'remark', 'agent_id', 'amount', 'other' ).order_by('-history_date')
+		history = obj.history.filter(id=obj.pk).values('history_date', 'remark', 'd_type',  'event_type', 'agent_id', 'amount', 'other' ).order_by('-history_date')
 		return history
 
 	# def get_profile(self, obj):

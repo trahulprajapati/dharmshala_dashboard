@@ -14,6 +14,8 @@ class Expense(models.Model):
 	rate = models.CharField('Price per item', max_length=10, blank=False)
 	exp_date = models.DateField(_("expense date"), default=datetime.date.today)
 	quantity = models.CharField('Quantity ', max_length=10, blank=False)
+	exp_type = models.CharField('Expense type ', max_length=10, blank=True, null=True, default='other')
+	exp_name = models.CharField('Expense Name ', max_length=30, blank=True, null=True, default='Name')
 	agent_id = models.ForeignKey(User, on_delete=models.CASCADE)
 	history = HistoricalRecords() #HistoricalDonation model
 	# contract_id = models.OneToOneField(Const_Contract, on_delete=models.CASCADE)

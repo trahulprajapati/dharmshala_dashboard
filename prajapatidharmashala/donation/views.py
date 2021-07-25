@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets, status
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.exceptions import APIException
 from rest_framework.decorators import action
 from django.contrib.auth import authenticate, get_user_model, logout
 from . import serializers
@@ -49,16 +50,35 @@ class DonationCreate(viewsets.ViewSet):
 	# 	serializer = serializers.DonationSerializer(queryset, many=True)
 	# 	return Response(serializer.data)
 
-	# def filter(self, request, from=None, to=None):
-	# 	queryset = Donation.objects.all()
-	# 	serializer = serializers.DonationSerializer(queryset, many=True)
-	# 	return Response(serializer.data)
-
 	def retrieve(self, request, pk=None):
 		queryset = Donation.objects.all()
 		user = get_object_or_404(queryset, pk=pk)
 		#profile = UserProfile.objects.all()
 		serializer = serializers.DonationHistorySerializer(user)
+		return Response(serializer.data)
+
+	def get_data(self, request, *args, **kwargs):
+		from_date = request.query_params.get('from')
+		to_date = request.query_params.get('to')
+		e_type = request.query_params.get('type')
+		#validate
+		if from_date and to_date:
+			if e_type:
+				typ = ['CONST', 'EVENT', 'OTHER', 'ALL']
+				if e_type not in typ:
+					raise APIException("Wrong type passed")
+				if e_type == 'ALL':
+					queryset = Donation.objects.filter(date__gte=from_date, date__lte=to_date)
+				else:
+					queryset = Donation.objects.filter(date__gte=from_date, date__lte=to_date, d_type=e_type)
+			else:
+				queryset = Donation.objects.filter(date__gte=from_date, date__lte=to_date)
+		else:
+			raise APIException("Wrong params")
+
+		print(str(queryset.query))
+		serializer = serializers.ListDonationSerializer(queryset, many=True)
+		#serializer = serializers.ContractExpSerializer(pl, many=True)
 		return Response(serializer.data)
 
 	#def update(self, request):
